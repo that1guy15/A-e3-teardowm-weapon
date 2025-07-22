@@ -1,0 +1,4 @@
+name = Sa.i-5 Rifle
+author = mike
+description = A futuristic sci-fi rifle with two firing modes: Evaporate (instantly removes objects) and Liquify (turns objects into scattered voxel particles). Switch between modes with a configurable key.
+tags = Tool Weapon Sci-Fi
