@@ -109,7 +109,7 @@ function tool:evaporate(pos, shape)
     ParticleAlpha(1, 0)
     ParticleGravity(-5)
     ParticleStretch(5)
-    ParticleLifetime(0.5, 1)
+    ParticleLife(0.5, 1)
     ParticleEmissive(5, 0)
     
     for i = 1, 20 do
@@ -149,7 +149,7 @@ function tool:liquify(pos, normal)
     ParticleRadius(0.1, 0.2)
     ParticleAlpha(1, 0.3)
     ParticleGravity(-10)
-    ParticleLifetime(2, 3)
+    ParticleLife(2, 3)
     ParticleStretch(5)
     ParticleTile(5)
     
