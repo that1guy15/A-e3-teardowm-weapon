@@ -122,13 +122,19 @@ function tool:evaporate(pos, shape)
     -- Remove voxels in radius
     MakeHole(pos, config.evaporateRadius, config.evaporateRadius, config.evaporateRadius)
     
-    -- If shape still exists and is small enough, destroy it
-    if shape and IsShapeValid(shape) then
+    -- Remove more voxels for better damage effect
+    MakeHole(pos, config.evaporateRadius * 1.5, config.evaporateRadius * 1.5, config.evaporateRadius * 1.5)
+    
+    -- If shape still exists, clear voxels or destroy small objects
+    if shape and IsHandleValid(shape) then
         local shapeBody = GetShapeBody(shape)
-        if IsBodyValid(shapeBody) then
+        if IsHandleValid(shapeBody) then
             local mass = GetBodyMass(shapeBody)
-            if mass < 100 then
+            if mass < 50 then
                 Delete(shapeBody)
+            else
+                -- Clear voxels from the shape for larger objects
+                ClearShape(shape)
             end
         end
     end
@@ -169,8 +175,21 @@ function tool:liquify(pos, normal)
     -- Sound effect
     PlaySound(LoadSound("impact/masonry-medium.ogg"), pos, 1)
     
-    -- Create hole and spawn debris
-    MakeHole(pos, config.liquifyRadius * 0.8, config.liquifyRadius * 0.8, config.liquifyRadius * 0.8)
+    -- Create larger hole for liquification effect
+    MakeHole(pos, config.liquifyRadius, config.liquifyRadius, config.liquifyRadius)
+    
+    -- Also affect shapes directly
+    local hit, dist, normal, shape = QueryRaycast(VecSub(pos, Vec(0.1, 0.1, 0.1)), Vec(0, 0, 1), config.liquifyRadius * 2)
+    if hit and shape and IsHandleValid(shape) then
+        local shapeBody = GetShapeBody(shape)
+        if IsHandleValid(shapeBody) then
+            local mass = GetBodyMass(shapeBody)
+            if mass < 200 then
+                -- For smaller objects, clear voxels to "liquify" them
+                ClearShape(shape)
+            end
+        end
+    end
     
     -- Apply force to nearby bodies
     for i, body in ipairs(bodies) do
